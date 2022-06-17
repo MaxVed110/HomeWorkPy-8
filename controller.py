@@ -4,18 +4,20 @@ import re
 import string
 from this import d
 
-telephone_dictionary = {}
 
-
-def add_data_telephone(key):
-    data = input('Введите ФИО, номер телефона и примечание через "/"...')
+def add_data_telephone(key, telephone_dictionary):
+    data = input(
+        'Введите ФИО, номер телефона и примечание(при необходимости) через "/"...   ')
     data += f'/{date.today()}'
     telephone_dictionary[key] = data
 
 
-def print_string_directory(key, telephone_directory: dict):
-
-    print(data_list_parse(key, telephone_directory))
+def print_string_directory(flag_key, telephone_directory: dict):
+    if flag_key == '/all':
+        for key in telephone_directory:
+            print(data_list_parse(key, telephone_directory))
+    else:
+        print(data_list_parse(flag_key, telephone_directory))
 
 
 def data_list_parse(key, telephone_directory: dict, flag='line'):
@@ -26,12 +28,12 @@ def data_list_parse(key, telephone_directory: dict, flag='line'):
 
     if flag == 'line':
         if len(data_list) == 4:
-            data_string += f'{key} {data_list[0]} - номер телефона: {number_telef(data_list[1])}; '\
-                f'дата создания контакта: {data_list[-1]}, примечание: {data_list[2]}'
+            data_string += f'{key} {data_list[0]} - номер телефона: {number_telef(data_list[1])} ; '\
+                f'примечание: {data_list[2]} , дата создания контакта: {data_list[-1]}'
         else:
             data_string += f'{key} {data_list[0]} - номер телефона: {number_telef(data_list[1])}; '\
                 f'дата создания контакта: {data_list[-1]}'
-    
+
     if flag == 'columns':
         if len(data_list) == 4:
             data_string += f'{key}\n \t{data_list[0]}\n \tномер телефона: {number_telef(data_list[1])}\n'\
@@ -59,7 +61,7 @@ def del_all_data_tel(dictionary: dict):
 
 def edit_data_tel(key, dictionary: dict, identific: str):
     data_list = dictionary[key].split('/')
-    string_data = input()
+    string_data = input('Введите новые данные...   ')
     if identific == 'номер':
         data_list[1] = string_data
     elif identific == 'ФИО':
@@ -83,35 +85,37 @@ def print_in_file(data_dictionary: dict, format: str):
     if format == '/json':
         with open('data_dictionary.json', 'a') as file:
             json.dump(data_dictionary, file, indent=4, ensure_ascii=False)
-    
+
     elif format == '/txt_line':
         with open('data_dictionary_line.txt', 'a') as file:
             for key in data_dictionary:
                 data_string = data_list_parse(key, data_dictionary)
                 file.write(data_string + '\n')
-    
+
     elif format == '/txt_columns':
         with open('data_dictionary_columns.txt', 'a') as file:
             for key in data_dictionary:
                 data_string = data_list_parse(key, data_dictionary, 'columns')
                 file.write(data_string + '\n')
 
-
-if __name__ == "__main__":
-
-    print('ddd')
-    k = input()
-    add_data_telephone(k)
-    print('ddd')
-    k = input()
-    add_data_telephone(k)
-    print_in_file(telephone_dictionary, '/txt_line')
-    print_in_file(telephone_dictionary, '/txt_columns')
+def load_on_file(data_dictionary, file: str, identific: str): #ToDo
+    if identific == 'txt_line':
+        data = open(file, 'r')
+        key = 1
+        for line in data:
+           key_l = 'l' + str(1)
+           key +=1
+           data_dictionary[key_l] = data_file_parse_txt(line)
 
 
-#############
-# import
+def data_file_parse_txt(line:str):
+    list_del = ['-', 'номер', 'телефона:','примечание', 'дата', 'создания', 'контакта:', ',', ';']
+    str_buf = []
+    new_str = ''
+    str_buf = line.split()
+    del str_buf[0]
+    new_list_data = [word for word in str_buf if word not in list_del]
+    new_str = '/'.join(new_list_data)
+    return new_str
 
 
-###############
-# export
