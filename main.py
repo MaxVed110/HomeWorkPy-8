@@ -1,2 +1,7 @@
-import re
+from view import start
+
+
+start()
+
+
  

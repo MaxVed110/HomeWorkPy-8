@@ -1,7 +1,9 @@
-from this import d
 import controller
+import logger_t
+
 
 def start():
+    logger_t.logger.info('START directory')
     telephone_dictionary = {}
     print('Привет, перед тобой телефонный справочник.\nХочешь увидеть функционал или сразу приступим к работе?\nОтветь "хочу" или нажми любую клавишу')
     global reply
@@ -15,8 +17,9 @@ def start():
               '"/print" - напечатать справочник в консоль\n'                        
               '"/print_in_file" - выгрузить справочник в файл в указанном формате\n'
               '"/load_on_file" - добавить в справочник данные из файла\n'
-              '"/exit" - закрыть справочник(сохранение в файл "txt_line")\n\n'
-              'Ознакомился? Введи нужную команду....')
+              '"/exit" - закрыть справочник(сохранение в файл "txt_line")\n'
+              '"/log_cls" - очистить логи\n\n'
+              'Ознакомился? Введи нужную команду....  ')
     else:
         reply = input('Введи команду.... ')
     while True:    
@@ -56,24 +59,19 @@ def start():
             identific_l = input('Введи тип файла...  ')
             file = input('Введи имя файла...  ')
             controller.load_on_file(telephone_dictionary, file, identific_l)
-            reply = input('Введи команду из имеющегося перечня....  ')
+            reply = input('Введи команду.... ')
+        
+        elif reply == '/log_cls':
+            logger_t.logger_cls()
+            reply = input('Введи команду.... ')
 
         elif reply == '/exit':
             flag = input('Сохранить справочник?... "да" / "нет"   ')
             if flag == 'да':
                 controller.print_in_file(telephone_dictionary, '/txt_line')
+                logger_t.logger.info('Exit from directory')
                 break
+            logger_t.logger.info('EXIT from directory')
             break
         else:
             reply = input('Введи команду из имеющегося перечня....  ')
-
-
-        
-
-
-
-
-
-if __name__ == "__main__":
-
-    start()
